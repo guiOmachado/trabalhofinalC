@@ -1,22 +1,5 @@
 #include <stdio.h>
 #include <accctrl.h>
-
-void leArquivo();
-
-void validaJogadas(int jogadasJogador1[]);
-
-void imprimeJogadores();
-
-void torneio();
-
-int jogada(int jogadasJogador1, int jogadasJogador2);
-
-void criaJogadores(int id, int jogadas[]);
-
-int matriz[6][4];
-int indexJogador = 0;
-int jogadasLidas[6];
-
 struct jogador {
     int id;
     int jogadas[6];
@@ -33,6 +16,26 @@ struct torneio {
 struct jogador j[4];
 struct torneio t[2];
 
+
+
+void leArquivo();
+
+void validaJogadas(int jogadasJogador1[]);
+
+void imprimeJogadores();
+
+void torneio();
+
+int jogada(int jogadasJogador1, int jogadasJogador2);
+
+void criaJogadores(int id, int jogadas[]);
+
+void placar(struct jogador resultado[]);
+
+int matriz[6][4];
+int indexJogador = 0;
+int jogadasLidas[6];
+
 int main() {
     leArquivo();
     imprimeJogadores();
@@ -45,13 +48,6 @@ void torneio() {
     for (int i = 0; i < 4; i++) {
         validaJogadas(j[i].jogadas);
     }
-
-    t[0].chaveA[0] = j[0];
-    t[0].chaveA[1] = j[1];
-    t[0].chaveB[0] = j[2];
-    t[0].chaveB[1] = j[3];
-
-
     printf("----Torneio Mundial de Pedra/papel/tesoura----- \n");
     printf("--------------------------------- \n");
     printf("------Semi Final------- \n");
@@ -69,6 +65,8 @@ void torneio() {
         }
     }
 
+    placar(t[0].chaveA);
+
     if (t[0].chaveA[0].vitorias > t[0].chaveA[1].vitorias) {
         t[0].final[0] = t[0].chaveA[0];
         t[0].final[0].vitorias = 0;
@@ -85,6 +83,8 @@ void torneio() {
             t[0].chaveB[1].vitorias++;
         }
     }
+
+    placar(t[0].chaveB);
 
     if (t[0].chaveB[0].vitorias > t[0].chaveB[1].vitorias) {
         t[0].final[1] = t[0].chaveB[0];
@@ -108,12 +108,14 @@ void torneio() {
 
     }
 
+    placar(t[0].final);
+
     if (t[0].final[0].vitorias > t[0].final[1].vitorias) {
         t[0].vencedor = t[0].final[0];
     } else if (t[0].final[0].vitorias < t[0].final[1].vitorias) {
         t[0].vencedor = t[0].final[1];
     }
-
+    printf(" \n");
     printf("----------Campeao----------- \n");
     printf("O grande campeao foi : JOGADOR %d \n", t[0].vencedor.id);
     printf("--------------------------------- \n");
@@ -139,6 +141,10 @@ void criaJogadores(int id, int jogadas[]) {
         j[indexJogador].jogadas[jogada] = jogadas[jogada];
     }
     indexJogador++;
+    t[0].chaveA[0] = j[0];
+    t[0].chaveA[1] = j[1];
+    t[0].chaveB[0] = j[2];
+    t[0].chaveB[1] = j[3];
 }
 
 void validaJogadas(int jogadasJogador1[]) {
@@ -176,6 +182,16 @@ int jogada(int jogadasJogador1, int jogadasJogador2) {
     }
 }
 
+void placar(struct jogador resultado[])
+{
+    printf("-----------Placar Da Partida----------\n");
+    printf("Jogador %d||  %d X", resultado[0].id, resultado[0].vitorias);
+    printf(" %d  ||%d Jogador", resultado[1].vitorias, resultado[1].id);
+    printf("\n");
+    printf("-----------Fim da partida----------\n");
+    printf(" \n");
+    printf(" \n");
+}
 
 void leArquivo() {
     FILE *arq;
