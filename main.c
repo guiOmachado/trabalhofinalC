@@ -9,6 +9,10 @@ void imprimeJogadores();
 
 void torneio();
 
+int jogada(int jogadasJogador1, int jogadasJogador2);
+
+void criaJogadores(int id, int jogadas[]);
+
 int matriz[6][4];
 int indexJogador = 0;
 int jogadasLidas[6];
@@ -31,7 +35,6 @@ struct torneio t[2];
 
 int main() {
     leArquivo();
-
     imprimeJogadores();
     torneio();
     return 0;
@@ -42,7 +45,6 @@ void torneio() {
     for (int i = 0; i < 4; i++) {
         validaJogadas(j[i].jogadas);
     }
-
 
     t[0].chaveA[0] = j[0];
     t[0].chaveA[1] = j[1];
@@ -58,37 +60,57 @@ void torneio() {
     printf("--------------------------------- \n");
     printf(" \n");
 
-    /*t[0].chaveA[0].vitorias = 2;
-    t[0].chaveA[1].vitorias = 1;
-
-    t[0].chaveB[0].vitorias = 1;
-    t[0].chaveB[1].vitorias = 2;*/
+    //logica vitoria chave A
+    for (int i = 0; i < 6; i++) {
+        if (jogada(t[0].chaveA[0].jogadas[i], t[0].chaveA[1].jogadas[i]) == 1) {
+            t[0].chaveA[0].vitorias++;
+        } else if (jogada(t[0].chaveA[0].jogadas[i], t[0].chaveA[1].jogadas[i]) == 2) {
+            t[0].chaveA[1].vitorias++;
+        }
+    }
 
     if (t[0].chaveA[0].vitorias > t[0].chaveA[1].vitorias) {
         t[0].final[0] = t[0].chaveA[0];
-    } else {
+        t[0].final[0].vitorias = 0;
+    } else if (t[0].chaveA[0].vitorias < t[0].chaveA[1].vitorias) {
         t[0].final[0] = t[0].chaveA[1];
+        t[0].final[0].vitorias = 0;
+    }
+
+    //Logica vitoria chave B
+    for (int i = 0; i < 6; i++) {
+        if (jogada(t[0].chaveB[0].jogadas[i], t[0].chaveB[1].jogadas[i]) == 1) {
+            t[0].chaveB[0].vitorias++;
+        } else if (jogada(t[0].chaveB[0].jogadas[i], t[0].chaveB[1].jogadas[i]) == 2) {
+            t[0].chaveB[1].vitorias++;
+        }
     }
 
     if (t[0].chaveB[0].vitorias > t[0].chaveB[1].vitorias) {
         t[0].final[1] = t[0].chaveB[0];
-    } else {
+        t[0].final[1].vitorias = 0;
+    } else if (t[0].chaveB[0].vitorias < t[0].chaveB[1].vitorias) {
         t[0].final[1] = t[0].chaveB[1];
+        t[0].final[1].vitorias = 0;
     }
-
-
     printf("----------Grande Final----------- \n");
     printf("Final: Jogador %d X Jogador %d \n", t[0].final[0].id, t[0].final[1].id);
     printf("--------------------------------- \n");
     printf(" \n");
 
-    /*  t[0].final[0].vitorias = 1;
-      t[0].final[1].vitorias = 2;*/
+    //Logica vitoria final
+    for (int i = 0; i < 6; i++) {
+        if (jogada(t[0].final[0].jogadas[i], t[0].final[1].jogadas[i]) == 1) {
+            t[0].final[0].vitorias++;
+        } else if (jogada(t[0].final[0].jogadas[i], t[0].final[1].jogadas[i]) == 2) {
+            t[0].final[1].vitorias++;
+        }
 
+    }
 
     if (t[0].final[0].vitorias > t[0].final[1].vitorias) {
         t[0].vencedor = t[0].final[0];
-    } else {
+    } else if (t[0].final[0].vitorias < t[0].final[1].vitorias) {
         t[0].vencedor = t[0].final[1];
     }
 
@@ -116,7 +138,6 @@ void criaJogadores(int id, int jogadas[]) {
     for (int jogada = 0; jogada < 6; jogada++) {
         j[indexJogador].jogadas[jogada] = jogadas[jogada];
     }
-
     indexJogador++;
 }
 
@@ -128,6 +149,33 @@ void validaJogadas(int jogadasJogador1[]) {
         }
     }
 }
+
+int jogada(int jogadasJogador1, int jogadasJogador2) {
+    switch (jogadasJogador1) {
+        case 1: {
+            if (jogadasJogador2 == 3) {
+                return 1;
+            } else if (jogadasJogador2 == 2) {
+                return 2;
+            }
+        }
+        case 2: {
+            if (jogadasJogador2 == 1) {
+                return 1;
+            } else if (jogadasJogador2 == 3) {
+                return 2;
+            }
+        }
+        case 3: {
+            if (jogadasJogador2 == 2) {
+                return 1;
+            } else if (jogadasJogador2 == 1) {
+                return 2;
+            }
+        }
+    }
+}
+
 
 void leArquivo() {
     FILE *arq;
@@ -174,3 +222,5 @@ void leArquivo() {
     printf("\n");
     fclose(arq);
 }
+
+
