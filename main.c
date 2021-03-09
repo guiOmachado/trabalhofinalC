@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 void leArquivo();
-
+void imprimeJogadores();
 
 int matriz[6][4];
 int indexJogador=0;
@@ -9,7 +9,7 @@ int jogadasLidas[6];
 
 struct jogador {
     int id;
-    int *jogadas;
+    int jogadas[6];
 };
 
 struct jogador j[4];
@@ -17,15 +17,7 @@ struct jogador j[4];
 int main() {
     leArquivo();
 
-    for(int i=0; i<4; i++){
-        printf("Jogador: %d ",j[i].id);
-        printf("\n");
-        for(int jogada=0; jogada<4; jogada++) {
-            printf("Jogada %d : %d ", jogada, j[i].jogadas[jogada]);
-        }
-        printf("\n");
-        printf("\n");
-    }
+    imprimeJogadores();
 
     return 0;
 }
@@ -35,10 +27,26 @@ void torneio()
 
 }
 
-void criaJogadores(int id,int *jogadas)
+void imprimeJogadores()
 {
-    j[indexJogador].id = id;
-    j[indexJogador].jogadas = jogadas;
+    for(int i=0; i<4; i++){
+        printf("Jogador: %d ",j[i].id);
+        printf("\n");
+        for(int jogada=0; jogada<6; jogada++) {
+            printf("Jogada %d : %d | ", jogada, j[i].jogadas[jogada]);
+        }
+        printf("\n");
+        printf("\n");
+    }
+}
+
+void criaJogadores(int id,int jogadas[])
+{
+    j[indexJogador].id = id+1;
+    for(int jogada=0; jogada<6; jogada++){
+        j[indexJogador].jogadas[jogada] = jogadas[jogada];
+    }
+
     indexJogador++;
 }
 
@@ -70,13 +78,19 @@ void leArquivo()
 
     for(int j=0; j<4; j++){
         for(int i=0; i<6; i++){
-            printf("%i ",matriz[i][j]);
+            //printf("%i ",matriz[i][j]);
             jogadasLidas[i] = matriz[i][j];
         }
+        for(int i=0; i<6; i++){
+            printf("%i ",jogadasLidas[i]);
+        }
+
         criaJogadores(j,jogadasLidas);
+
         printf("\n");
     }
 
+    printf("\n");
     printf("\n");
     fclose(arq);
 }
